@@ -8,6 +8,8 @@ require("dotenv").config();
 
 const app = express();
 
+//This is a default route
+
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Middleware to parse JSON
 connectDB();
