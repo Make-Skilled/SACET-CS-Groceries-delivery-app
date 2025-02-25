@@ -29,12 +29,14 @@ const addToCart = async (req, res) => {
       });
     }
 
-    products=await Cart.findOne({"orderedBy":userEmail});
-    console.log(products['products']);
+    const products = await Cart.findOne({ orderedBy: userEmail });
+    if (products !== null) {
+      console.log(products['products']);
+    }
     // Check if this product is already in user's cart
     const existingCart = await Cart.findOne({
       orderedBy: userEmail,
-      "products.productId": productId
+      "products.productId": String(productId)
     });
 
     if (existingCart) {
@@ -56,7 +58,7 @@ const addToCart = async (req, res) => {
 
     // Add the product
     cart.products.push({
-      productId: product._id,
+      productId: String(product._id),
       name: product.name,
       price: product.price,
       quantity: 1,
@@ -105,7 +107,51 @@ const getCart = async (req, res) => {
   }
 };
 
+const removeFromCart = async (req, res) => {
+  try {
+    const { productId, userEmail } = req.body;
+
+    // Basic validation
+    if (!productId || !userEmail) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Product ID and user email are required" 
+      });
+    }
+
+    // Find the cart and remove the product
+    const cart = await Cart.findOne({ orderedBy: userEmail });
+    
+    if (!cart) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Cart not found" 
+      });
+    }
+
+    // Remove the product from the products array
+    cart.products = cart.products.filter(product => product.productId !== productId);
+    
+    // Save the updated cart
+    await cart.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Product removed from cart successfully",
+      cart
+    });
+
+  } catch (error) {
+    console.error("Error in removeFromCart:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error" 
+    });
+  }
+};
+
 module.exports = {
   addToCart,
-  getCart
+  getCart,
+  removeFromCart
 };
