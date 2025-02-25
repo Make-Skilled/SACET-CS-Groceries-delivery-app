@@ -7,6 +7,7 @@ const AddProduct = () => {
     price: "",
     quantity: "",
     category: "",
+    imageUrl: "",
     inStock: true,
     deliveryTime: "",
   });
@@ -27,17 +28,24 @@ const AddProduct = () => {
     e.preventDefault();
   
     // Basic validation
-    if (!product.name || !product.price || !product.quantity || !product.category) {
+    if (!product.name || !product.price || !product.quantity || !product.category || !product.imageUrl) {
       setMessage("Please fill all required fields.");
       return;
     }
   
     setLoading(true);
     try {
-        alert(product.name);
       const response = await axios.post("http://localhost:5432/api/admin/add-product", product);
       setMessage("Product added successfully!");
-      setProduct({ name: "", price: "", quantity: "", category: "", inStock: true, deliveryTime: "" });
+      setProduct({ 
+        name: "", 
+        price: "", 
+        quantity: "", 
+        category: "", 
+        imageUrl: "",
+        inStock: true, 
+        deliveryTime: "" 
+      });
     } catch (error) {
       setMessage("Error adding product. Try again.");
       console.error("Add Product Error:", error);
@@ -47,7 +55,7 @@ const AddProduct = () => {
   
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-20">
       <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
 
       {message && <p className="text-red-500 mb-2">{message}</p>}
@@ -92,6 +100,20 @@ const AddProduct = () => {
           />
         </div>
 
+        {/* Image URL */}
+        <div>
+          <label className="block text-gray-700">Image URL</label>
+          <input
+            type="url"
+            name="imageUrl"
+            value={product.imageUrl}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            placeholder="https://example.com/image.jpg"
+            required
+          />
+        </div>
+
         {/* Category */}
         <div>
           <label className="block text-gray-700">Category</label>
@@ -110,34 +132,34 @@ const AddProduct = () => {
           </select>
         </div>
 
-        {/* In Stock Checkbox */}
+        {/* In Stock */}
         <div className="flex items-center">
           <input
             type="checkbox"
             name="inStock"
             checked={product.inStock}
             onChange={handleChange}
-            className="mr-2"
+            className="h-4 w-4 text-blue-600 border-gray-300 rounded"
           />
-          <label className="text-gray-700">In Stock</label>
+          <label className="ml-2 block text-gray-700">In Stock</label>
         </div>
 
         {/* Delivery Time */}
         <div>
-          <label className="block text-gray-700">Estimated Delivery Time</label>
+          <label className="block text-gray-700">Delivery Time</label>
           <input
             type="text"
             name="deliveryTime"
             value={product.deliveryTime}
             onChange={handleChange}
             className="w-full p-2 border rounded-md"
+            placeholder="e.g., 30-45 min"
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
           disabled={loading}
         >
           {loading ? "Adding..." : "Add Product"}

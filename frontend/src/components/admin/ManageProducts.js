@@ -58,8 +58,8 @@ const ManageProducts = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Manage Products</h2>
+    <div className="max-w-5xl mx-auto p-6 bg-white shadow-md rounded-lg mt-12">
+      <h2 className="text-2xl font-bold mb-4 mt-12">Manage Products</h2>
 
       {message && <p className="text-green-600 mb-4">{message}</p>}
 

@@ -1,6 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if token exists
+    const token = sessionStorage.getItem('token');
+    const userEmail = sessionStorage.getItem('userEmail');
+    
+    if (!token || userEmail !== 'admin@gmail.com') {
+      alert('Please login as admin to access this page');
+      navigate('/login');
+      return;
+    }
+    
+    setIsAuthenticated(true);
+  }, [navigate]);
+
+  if (!isAuthenticated) {
+    return null; // Don't render anything while checking authentication
+  }
+
   const stats = [
     { id: 1, title: "Total Orders", value: "1,245", color: "bg-blue-500" },
     { id: 2, title: "Total Revenue", value: "$58,340", color: "bg-green-500" },
@@ -16,7 +38,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">📊 Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 mt-12">📊 Admin Dashboard</h1>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

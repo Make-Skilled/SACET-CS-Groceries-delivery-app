@@ -60,10 +60,18 @@ const Login = () => {
           sessionStorage.setItem('token', response.data.token);
           // Set the auth header for future requests
           setAuthHeader(axios);
-          console.log("Login Successful:", response.data);
-          alert("Login successful! Redirecting...");
+          
+          // Store user email
           sessionStorage.setItem('userEmail', formData.email);
-          navigate("/customer"); // Redirect to dashboard after successful login
+          
+          // Check user role and redirect accordingly
+          if(response.data.user.role === 'admin') {
+            window.location.href = '/admin';
+          } else {
+            window.location.href = '/customer';
+          }
+          
+          alert(response.data.message);
         }
       } catch (error) {
         console.error("Login Failed:", error.response?.data || error.message);

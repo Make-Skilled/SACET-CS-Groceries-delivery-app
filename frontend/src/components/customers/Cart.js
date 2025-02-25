@@ -7,6 +7,7 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [orderLoading, setOrderLoading] = useState(false);
   const navigate = useNavigate();
 
   // Fetch cart items
@@ -87,6 +88,50 @@ const Cart = () => {
     }
   };
 
+  // Function to handle order placement
+  const handlePlaceOrder = async () => {
+    setOrderLoading(true);
+    try {
+      const userEmail = sessionStorage.getItem('userEmail');
+      if (!userEmail) {
+        alert('Please login to place an order');
+        navigate("/login");
+        return;
+      }
+
+      // For now, using a default shipping address
+      const shippingAddress = {
+        street: "123 Main St",
+        city: "Sample City",
+        state: "Sample State",
+        pincode: "123456"
+      };
+
+      const response = await axios.post('http://localhost:5432/api/customer/orders/place-order', {
+        userEmail,
+        shippingAddress,
+        cartItems // Send current cart items to ensure consistency
+      });
+
+      if (response.data.success) {
+        alert('Orders placed successfully!');
+        setCartItems([]); // Clear cart items locally
+        navigate('/customer'); // Redirect to products page
+      } else {
+        alert(response.data.message || 'Failed to place orders');
+      }
+    } catch (error) {
+      console.error('Error placing orders:', error.response?.data || error);
+      alert(error.response?.data?.message || 'Failed to place orders');
+      
+      if (error.response?.status === 401) {
+        navigate("/login");
+      }
+    } finally {
+      setOrderLoading(false);
+    }
+  };
+
   // Calculate total price
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -141,30 +186,46 @@ const Cart = () => {
               key={item.productId}
               className="flex items-center justify-between border-b py-4"
             >
+              {/* Product Image */}
+              <div className="w-24 h-24 mr-4 flex-shrink-0">
+                <img 
+                  src={item.imageUrl} 
+                  alt={item.name}
+                  className="w-full h-full object-cover rounded-lg"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/150?text=No+Image';
+                  }}
+                />
+              </div>
+
+              {/* Product Details */}
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{item.name}</h3>
                 <p className="text-gray-600">Category: {item.category}</p>
                 <p className="text-gray-600">Price: ₹{item.price}</p>
               </div>
+
+              {/* Quantity Controls */}
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => handleQuantityChange(item.productId, item.quantity - 1)}
-                    className="px-2 py-1 bg-gray-200 rounded"
+                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                   >
                     -
                   </button>
-                  <span>{item.quantity}</span>
+                  <span className="w-8 text-center">{item.quantity}</span>
                   <button
                     onClick={() => handleQuantityChange(item.productId, item.quantity + 1)}
-                    className="px-2 py-1 bg-gray-200 rounded"
+                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                   >
                     +
                   </button>
                 </div>
                 <button
                   onClick={() => handleRemoveItem(item.productId)}
-                  className="text-red-600 hover:text-red-800"
+                  className="text-red-600 hover:text-red-800 px-2 py-1"
                 >
                   Remove
                 </button>
@@ -173,8 +234,16 @@ const Cart = () => {
           ))}
           <div className="mt-6 text-right">
             <p className="text-xl font-bold">Total: ₹{totalPrice}</p>
-            <button className="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
-              Proceed to Checkout
+            <button 
+              onClick={handlePlaceOrder}
+              disabled={orderLoading || cartItems.length === 0}
+              className={`mt-4 px-6 py-2 rounded-lg ${
+                orderLoading || cartItems.length === 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700"
+              } text-white`}
+            >
+              {orderLoading ? "Placing Order..." : "Place Order"}
             </button>
           </div>
         </div>
