@@ -62,8 +62,8 @@ const addToCart = async (req, res) => {
       name: product.name,
       price: product.price,
       quantity: 1,
-      totalPrice: product.price,
       category: product.category,
+      imageUrl: product.imageUrl,
       inStock: product.inStock,
       deliveryTime: product.deliveryTime
     });

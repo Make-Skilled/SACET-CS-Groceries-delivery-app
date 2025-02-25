@@ -20,7 +20,10 @@ const ProductSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Fruits", "Dairy", "Bakery", "Vegetables"],
+    },
+    imageUrl: {
+      type: String,
+      trim: true,
     },
     inStock: {
       type: Boolean,

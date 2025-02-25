@@ -5,7 +5,7 @@ const Product = require("../../models/Product");
 // @access  Admin
 const addProduct = async (req, res) => {
   try {
-    const { name, price, quantity, category, inStock, deliveryTime } = req.body;
+    const { name, price, quantity,imageUrl, category, inStock, deliveryTime } = req.body;
 
     if (!name || !price || !quantity || !category) {
       return res.status(400).json({ error: "All required fields must be filled." });
@@ -15,6 +15,7 @@ const addProduct = async (req, res) => {
       name,
       price,
       quantity,
+      imageUrl,
       category,
       inStock,
       deliveryTime,

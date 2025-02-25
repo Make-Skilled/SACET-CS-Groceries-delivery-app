@@ -23,14 +23,13 @@ const CartSchema = new mongoose.Schema(
           required: true,
           min: 1,
         },
-        totalPrice: {
-          type: Number,
-          required: true,
-        },
         category: {
           type: String,
           required: true,
-          enum: ["Fruits", "Dairy", "Bakery", "Vegetables"],
+        },
+        imageUrl: {
+          type: String,
+          trim: true,
         },
         inStock: {
           type: Boolean,
