@@ -75,7 +75,7 @@ const GroceryDashboard = () => {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto mt-12">
+    <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8 flex justify-between items-center">
         <div>
@@ -95,25 +95,7 @@ const GroceryDashboard = () => {
       {error && <p className="text-center text-red-500">{error}</p>}
       {cartMessage && <p className="text-center text-green-600">{cartMessage}</p>}
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md text-center">
-          <div className="text-2xl font-bold text-green-600">15-35 min</div>
-          <p className="text-gray-600 text-sm">Average Delivery Time</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-md text-center">
-          <div className="text-2xl font-bold text-blue-600">
-            {products.length > 0
-              ? `${((products.filter((p) => p.inStock).length / products.length) * 100).toFixed(0)}%`
-              : "0%"}
-          </div>
-          <p className="text-gray-600 text-sm">Products in Stock</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-md text-center">
-          <div className="text-2xl font-bold text-purple-600">4.8/5</div>
-          <p className="text-gray-600 text-sm">Customer Rating</p>
-        </div>
-      </div>
+
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

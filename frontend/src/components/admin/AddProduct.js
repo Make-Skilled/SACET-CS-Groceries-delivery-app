@@ -146,13 +146,13 @@ const AddProduct = () => {
 
         {/* Delivery Time */}
         <div>
-          <label className="block text-gray-700">Delivery Time</label>
+          <label className="block text-gray-700 hidden">Delivery Time</label>
           <input
             type="text"
             name="deliveryTime"
             value={product.deliveryTime}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md hidden"
             placeholder="e.g., 30-45 min"
           />
         </div>

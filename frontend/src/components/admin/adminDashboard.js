@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { ShoppingBag, Truck, Clock, Shield } from 'lucide-react';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check if token exists
     const token = sessionStorage.getItem('token');
-    const userEmail = sessionStorage.getItem('userEmail');
+    const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
     
-    if (!token || userEmail !== 'admin@gmail.com') {
-      alert('Please login as admin to access this page');
+    if (!token || !isAdmin) {
       navigate('/login');
       return;
     }
@@ -20,74 +19,103 @@ const AdminDashboard = () => {
   }, [navigate]);
 
   if (!isAuthenticated) {
-    return null; // Don't render anything while checking authentication
+    return null;
   }
 
   const stats = [
     { id: 1, title: "Total Orders", value: "1,245", color: "bg-blue-500" },
-    { id: 2, title: "Total Revenue", value: "$58,340", color: "bg-green-500" },
+    { id: 2, title: "Total Revenue", value: "₹58,340", color: "bg-green-500" },
     { id: 3, title: "Total Users", value: "3,520", color: "bg-yellow-500" },
     { id: 4, title: "Total Products", value: "245", color: "bg-purple-500" },
   ];
 
-  const recentOrders = [
-    { id: "#ORD1023", customer: "John Doe", amount: "$25.99", status: "Delivered", date: "2024-02-22" },
-    { id: "#ORD1024", customer: "Alice Smith", amount: "$18.50", status: "Pending", date: "2024-02-21" },
-    { id: "#ORD1025", customer: "Michael Brown", amount: "$32.99", status: "Cancelled", date: "2024-02-20" },
+  const features = [
+    { icon: <ShoppingBag size={24} />, title: 'Fresh Products', description: 'Hand-picked fresh groceries from local farms' },
+    { icon: <Truck size={24} />, title: 'Fast Delivery', description: 'Same-day delivery to your doorstep' },
+    { icon: <Clock size={24} />, title: '24/7 Support', description: 'Round-the-clock customer service' },
+    { icon: <Shield size={24} />, title: 'Secure Payments', description: 'Safe and secure payment methods' }
+  ];
+
+  const categories = [
+    { name: 'Fresh Fruits', image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
+    { name: 'Vegetables', image: 'https://images.unsplash.com/photo-1597362925123-77861d3fbac7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
+    { name: 'Dairy Products', image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' },
+    { name: 'Bakery Items', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3' }
   ];
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 mt-12">📊 Admin Dashboard</h1>
-
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat) => (
-          <div key={stat.id} className={`p-6 rounded-lg text-white ${stat.color} shadow-md`}>
-            <h2 className="text-2xl font-semibold">{stat.value}</h2>
-            <p className="text-lg">{stat.title}</p>
-          </div>
-        ))}
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+      {/* Admin Stats Section */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">📊 Admin Dashboard</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat) => (
+            <div key={stat.id} className={`p-6 rounded-lg text-white ${stat.color} shadow-md`}>
+              <h2 className="text-2xl font-semibold">{stat.value}</h2>
+              <p className="text-lg">{stat.title}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Recent Orders */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">🛒 Recent Orders</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200 text-gray-700">
-                <th className="py-3 px-4 border border-gray-300">Order ID</th>
-                <th className="py-3 px-4 border border-gray-300">Customer</th>
-                <th className="py-3 px-4 border border-gray-300">Amount</th>
-                <th className="py-3 px-4 border border-gray-300">Status</th>
-                <th className="py-3 px-4 border border-gray-300">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentOrders.map((order) => (
-                <tr key={order.id} className="border border-gray-300">
-                  <td className="py-3 px-4 border border-gray-300">{order.id}</td>
-                  <td className="py-3 px-4 border border-gray-300">{order.customer}</td>
-                  <td className="py-3 px-4 border border-gray-300 font-bold">{order.amount}</td>
-                  <td className="py-3 px-4 border border-gray-300">
-                    <span
-                      className={`px-3 py-1 rounded-lg text-sm font-semibold ${
-                        order.status === "Delivered"
-                          ? "bg-green-200 text-green-700"
-                          : order.status === "Pending"
-                          ? "bg-yellow-200 text-yellow-700"
-                          : "bg-red-200 text-red-700"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 border border-gray-300">{order.date}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Hero Section */}
+      <div className="relative h-[400px] overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+            alt="Fresh groceries"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 h-full flex items-center">
+          <div className="max-w-2xl text-white">
+            <h1 className="text-4xl font-bold mb-6">Welcome to Admin Dashboard</h1>
+            <p className="text-xl mb-8">Manage your products, orders, and customers all in one place.</p>
+            <Link
+              to="/admin/products"
+              className="bg-green-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition duration-300"
+            >
+              Manage Products
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <div key={index} className="p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-300">
+                <div className="text-green-600 mb-4">{feature.icon}</div>
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Categories Section */}
+      <div className="py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Product Categories</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {categories.map((category, index) => (
+              <Link key={index} to="/admin/products" className="group">
+                <div className="relative h-64 rounded-lg overflow-hidden">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  <h3 className="absolute bottom-4 left-4 text-white text-xl font-semibold">{category.name}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>

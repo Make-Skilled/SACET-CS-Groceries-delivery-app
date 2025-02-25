@@ -52,7 +52,7 @@ const MyOrders = () => {
 
   if (loading) {
     return (
-      <div className="p-6 max-w-6xl mx-auto mt-12">
+      <div className="p-6 max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">My Orders</h1>
         <p className="text-gray-600">Loading orders...</p>
       </div>

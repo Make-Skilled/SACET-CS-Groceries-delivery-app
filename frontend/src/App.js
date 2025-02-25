@@ -11,7 +11,9 @@ import CustomerLayout from "./components/customers/CustomerLayout";
 import AdminLayout from "./components/admin/AdminLayout";
 import Orders from "./components/admin/Orders";
 import Products from "./components/admin/Products";
+import AddProduct from "./components/admin/AddProduct";
 import LandingPage from "./components/common/index";
+import AdminDashboard from "./components/admin/adminDashboard";
 
 function App() {
   return (
@@ -35,7 +37,9 @@ function App() {
 
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
               <Route path="products" element={<Products />} />
+              <Route path="add-product" element={<AddProduct />} />
               <Route path="orders" element={<Orders />} />
             </Route>
 
