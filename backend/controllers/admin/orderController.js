@@ -1,4 +1,5 @@
 const Order = require("../../models/Order");
+const Product = require("../../models/Product");
 
 const getAllOrders = async (req, res) => {
   try {
@@ -52,6 +53,30 @@ const updateOrderStatus = async (req, res) => {
         success: false,
         message: "Order not found"
       });
+    }
+
+    // If status is being updated to delivered, update product stock
+    if (status === "delivered") {
+      try {
+        // Update stock for each product in the order
+        for (const product of order.products) {
+          const productDoc = await Product.findById(product.productId);
+          if (productDoc) {
+            console.log(`Updating stock for product ${product.name}`);
+            console.log(`Current stock: ${productDoc.quantity}, Ordered quantity: ${product.quantity}`);
+            productDoc.quantity = Math.max(0, productDoc.quantity - product.quantity);
+            console.log(`New stock: ${productDoc.quantity}`);
+            await productDoc.save();
+          }
+        }
+      } catch (error) {
+        console.error("Error updating product stock:", error);
+        return res.status(500).json({
+          success: false,
+          message: "Error updating product stock",
+          error: error.message
+        });
+      }
     }
 
     order.status = status;
