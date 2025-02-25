@@ -9,6 +9,7 @@ const customerRoutes = require('./routes/customer/customerRoutes');
 const orderRoutes = require('./routes/customer/orderRoutes');
 const adminOrderRoutes = require('./routes/admin/orderRoutes');
 const commonRoutes = require('./routes/common/commonRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/api/customer', customerRoutes);
 app.use('/api/customer/orders', orderRoutes);
 app.use('/', adminOrderRoutes); // Mount at root since routes include full path
 app.use('/api/common', commonRoutes);
+app.use('/api/users', userRoutes);
 
 const PORT = 5432;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
