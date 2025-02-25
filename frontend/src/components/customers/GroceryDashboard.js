@@ -47,7 +47,6 @@ const GroceryDashboard = () => {
     setCartMessage("");
   
     try {
-      alert(productId);
         const response = await axios.post("http://localhost:5432/api/customer/add-to-cart", { 
         productId,
         userEmail: sessionStorage.getItem('userEmail')
