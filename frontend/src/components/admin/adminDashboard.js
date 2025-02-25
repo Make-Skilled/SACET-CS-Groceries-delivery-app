@@ -45,18 +45,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      {/* Admin Stats Section */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">📊 Admin Dashboard</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat) => (
-            <div key={stat.id} className={`p-6 rounded-lg text-white ${stat.color} shadow-md`}>
-              <h2 className="text-2xl font-semibold">{stat.value}</h2>
-              <p className="text-lg">{stat.title}</p>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Hero Section */}
       <div className="relative h-[400px] overflow-hidden">
